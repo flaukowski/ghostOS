@@ -1,0 +1,77 @@
+{
+  "name": "ghostos",
+  "version": "0.1.0",
+  "description": "Resonant Systems Architecture for Emergent Intelligence",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./signal": {
+      "import": "./dist/signal/index.mjs",
+      "require": "./dist/signal/index.js",
+      "types": "./dist/signal/index.d.ts"
+    },
+    "./resonance": {
+      "import": "./dist/resonance/index.mjs",
+      "require": "./dist/resonance/index.js",
+      "types": "./dist/resonance/index.d.ts"
+    },
+    "./emergence": {
+      "import": "./dist/emergence/index.mjs",
+      "require": "./dist/emergence/index.js",
+      "types": "./dist/emergence/index.d.ts"
+    },
+    "./safety": {
+      "import": "./dist/safety/index.mjs",
+      "require": "./dist/safety/index.js",
+      "types": "./dist/safety/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "resonance",
+    "emergence",
+    "consciousness",
+    "signal-processing",
+    "systems-architecture",
+    "kuramoto",
+    "oscillators",
+    "space-child"
+  ],
+  "author": "Space Child Research Collective",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flaukowski/ghostOS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/flaukowski/ghostOS/issues"
+  },
+  "homepage": "https://github.com/flaukowski/ghostOS#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
