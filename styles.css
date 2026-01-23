@@ -57,7 +57,9 @@ body {
     text-decoration: none;
     font-weight: bold;
     border-radius: 5px;
+    transition: opacity 0.2s ease;
 }
+.cta-button:hover { opacity: 0.85; }
 
 /* Features Section */
 .features {
