@@ -52,6 +52,17 @@ export {
   type SystemState,
 } from './safety';
 
+// Chiral dynamics (quantum stability enhancement)
+export {
+  ChiralEngine,
+  createChiralEngine,
+  isChirallyStable,
+  optimalEta,
+  type ChiralConfig,
+  type ChiralState,
+  type ChiralCoupling,
+} from './chiral';
+
 // ============================================
 // GHOST OS UNIFIED INTERFACE
 // ============================================
@@ -60,6 +71,7 @@ import { SignalProcessor, type Signal as SignalType } from './signal';
 import { ResonanceEngine, type ResonantState } from './resonance';
 import { EmergenceAccumulator } from './emergence';
 import { SafetyEnvelope, type SafetyStatus } from './safety';
+import { type ChiralState, type ChiralConfig } from './chiral';
 import { DEFAULT_CONFIG } from './constants';
 
 export interface GhostOSConfig {
@@ -67,6 +79,10 @@ export interface GhostOSConfig {
   lambda?: number;
   targetCoherence?: number;
   decayRate?: number;
+  /** Enable chiral stability mechanisms (default: true) */
+  enableChiral?: boolean;
+  /** Chiral engine configuration */
+  chiralConfig?: ChiralConfig;
 }
 
 export interface GhostOSState {
@@ -78,6 +94,8 @@ export interface GhostOSState {
   };
   safety: SafetyStatus;
   tick: number;
+  /** Chiral stability state (if enabled) */
+  chiral?: ChiralState;
 }
 
 /**
@@ -113,6 +131,8 @@ export class GhostOS {
     this.resonance = new ResonanceEngine({
       lambda: config.lambda,
       targetCoherence: config.targetCoherence,
+      enableChiral: config.enableChiral ?? true,
+      chiralConfig: config.chiralConfig,
     });
     this.emergence = new EmergenceAccumulator({
       dimensions: dims,
@@ -138,11 +158,12 @@ export class GhostOS {
     this.emergence.integrate(resonantState.emergence);
     const emergenceState = this.emergence.getEmergenceState();
 
-    // Safety check
+    // Safety check (include chiral state if available)
     const safetyStatus = this.safety.check({
       coherence: resonantState.coherence,
       emergenceNorm: emergenceState.norm,
       energy: resonantState.energy,
+      chiral: resonantState.chiral,
     });
 
     // Apply safety interventions if needed
@@ -152,7 +173,7 @@ export class GhostOS {
 
     this.tick++;
 
-    return {
+    const result: GhostOSState = {
       resonance: resonantState,
       emergence: {
         norm: emergenceState.norm,
@@ -162,6 +183,13 @@ export class GhostOS {
       safety: safetyStatus,
       tick: this.tick,
     };
+
+    // Include chiral state if available
+    if (resonantState.chiral) {
+      result.chiral = resonantState.chiral;
+    }
+
+    return result;
   }
 
   /**
@@ -184,6 +212,18 @@ export class GhostOS {
       case 'emergency-halt':
         this.resonance.reset();
         this.emergence.reset();
+        break;
+      // Chiral-specific interventions
+      case 'chiral-rebalance':
+        this.resonance.optimizeChiralStability();
+        break;
+      case 'flip-handedness':
+        // Reduce asymmetry by perturbing state
+        this.resonance.perturbState(0.05);
+        break;
+      case 'topological-reset':
+        // Gentle reset to restore topological stability
+        this.resonance.perturbState(0.02);
         break;
     }
   }
@@ -223,6 +263,27 @@ export class GhostOS {
       this.safety.isConsciousRegime(state.norm) &&
       this.emergence.isHealthy()
     );
+  }
+
+  /**
+   * Check if system has chiral stability
+   */
+  isChirallyStable(): boolean {
+    return this.resonance.isChirallyStable();
+  }
+
+  /**
+   * Get chiral state summary
+   */
+  getChiralState(): ChiralState | null {
+    return this.resonance.getChiralState();
+  }
+
+  /**
+   * Optimize chiral parameters for maximum stability
+   */
+  optimizeChiral(): void {
+    this.resonance.optimizeChiralStability();
   }
 }
 

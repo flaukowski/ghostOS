@@ -17,8 +17,12 @@ import {
   PHI,
   EMERGENCE_COEFFICIENT,
   TAU,
+  CHIRAL_ETA_DEFAULT,
+  NON_RECIPROCAL_ASYMMETRY,
+  CISS_COUPLING,
 } from '../constants';
 import type { Signal } from '../signal';
+import { ChiralEngine, type ChiralState, type ChiralConfig } from '../chiral';
 
 // ============================================
 // TYPES
@@ -29,6 +33,10 @@ export interface ResonanceConfig {
   adaptiveRate?: number;
   targetCoherence?: number;
   dt?: number;
+  /** Enable chiral stability mechanisms */
+  enableChiral?: boolean;
+  /** Chiral configuration options */
+  chiralConfig?: ChiralConfig;
 }
 
 export interface ResonantState {
@@ -40,6 +48,8 @@ export interface ResonantState {
   emergence: Float64Array;
   phase: number;
   lambda: number;
+  /** Chiral state (if chiral mode enabled) */
+  chiral?: ChiralState;
 }
 
 export interface ModeInfo {
@@ -60,8 +70,13 @@ export class ResonanceEngine {
   private dt: number;
   private state: Float64Array;
   private previousState: Float64Array;
+  private velocity: Float64Array;  // For chiral wave dynamics
   private phase: number = 0;
   private tick: number = 0;
+
+  // Chiral stability components
+  private enableChiral: boolean;
+  private chiralEngine: ChiralEngine | null = null;
 
   constructor(config: ResonanceConfig = {}) {
     this.lambda = config.lambda ?? DAMPING_DEFAULT;
@@ -70,11 +85,27 @@ export class ResonanceEngine {
     this.dt = config.dt ?? DEFAULT_CONFIG.dt;
     this.state = new Float64Array(DEFAULT_CONFIG.dimensions);
     this.previousState = new Float64Array(DEFAULT_CONFIG.dimensions);
+    this.velocity = new Float64Array(DEFAULT_CONFIG.dimensions);
+
+    // Initialize chiral stability if enabled
+    this.enableChiral = config.enableChiral ?? true;
+    if (this.enableChiral) {
+      this.chiralEngine = new ChiralEngine({
+        eta: CHIRAL_ETA_DEFAULT,
+        gamma: this.lambda,
+        ...config.chiralConfig,
+      });
+    }
   }
 
   /**
    * Process a signal through the resonance layer
    * Applies: dx/dt = f(x) - λx
+   *
+   * With chiral enhancement:
+   * - Non-reciprocal coupling for directional stability
+   * - CISS coherence boost
+   * - Topological protection of edge modes
    */
   process(signal: Signal): ResonantState {
     const n = signal.dimensions;
@@ -83,22 +114,17 @@ export class ResonanceEngine {
     if (this.state.length !== n) {
       this.state = new Float64Array(n);
       this.previousState = new Float64Array(n);
+      this.velocity = new Float64Array(n);
     }
 
     // Store previous state for emergence calculation
     this.previousState.set(this.state);
 
-    // Apply resonant dynamics
-    for (let i = 0; i < n; i++) {
-      // Generative term: f(x) = input + nonlinear coupling
-      const fx = signal.data[i] + this.nonlinearCoupling(i);
-
-      // Constraint term: λx
-      const constraint = this.lambda * this.state[i];
-
-      // Update: dx/dt = f(x) - λx
-      const derivative = fx - constraint;
-      this.state[i] += derivative * this.dt;
+    // Apply resonant dynamics with optional chiral enhancement
+    if (this.enableChiral && this.chiralEngine) {
+      this.processWithChiral(signal, n);
+    } else {
+      this.processStandard(signal, n);
     }
 
     // Calculate emergence (the residue of transformation)
@@ -106,8 +132,14 @@ export class ResonanceEngine {
 
     // Calculate metrics
     const energy = this.calculateEnergy();
-    const coherence = this.calculateCoherence();
+    let coherence = this.calculateCoherence();
     const dominantFreq = this.estimateDominantFrequency();
+
+    // Apply CISS coherence enhancement if chiral is enabled
+    if (this.enableChiral && this.chiralEngine) {
+      coherence = this.chiralEngine.applyCISSEnhancement(coherence);
+    }
+
     const isStable = this.checkStability(energy, coherence);
 
     // Adaptive damping
@@ -117,7 +149,8 @@ export class ResonanceEngine {
     this.phase = (this.phase + dominantFreq * this.dt) % TAU;
     this.tick++;
 
-    return {
+    // Build result with optional chiral state
+    const result: ResonantState = {
       state: new Float64Array(this.state),
       coherence,
       energy,
@@ -127,6 +160,80 @@ export class ResonanceEngine {
       phase: this.phase,
       lambda: this.lambda,
     };
+
+    if (this.enableChiral && this.chiralEngine) {
+      result.chiral = this.chiralEngine.getState();
+    }
+
+    return result;
+  }
+
+  /**
+   * Standard resonance processing (original algorithm)
+   */
+  private processStandard(signal: Signal, n: number): void {
+    for (let i = 0; i < n; i++) {
+      const fx = signal.data[i] + this.nonlinearCoupling(i);
+      const constraint = this.lambda * this.state[i];
+      const derivative = fx - constraint;
+      this.state[i] += derivative * this.dt;
+    }
+  }
+
+  /**
+   * Chiral-enhanced resonance processing
+   * Implements non-reciprocal coupling and wave dynamics
+   */
+  private processWithChiral(signal: Signal, n: number): void {
+    // First, add input signal to state
+    for (let i = 0; i < n; i++) {
+      this.state[i] += signal.data[i] * this.dt;
+    }
+
+    // Apply chiral dynamics (non-reciprocal sine-Gordon)
+    const result = this.chiralEngine!.applyChiralDynamics(
+      this.state,
+      this.velocity,
+      this.dt
+    );
+
+    this.state = result.state;
+    this.velocity = result.velocity;
+
+    // Apply chiral-aware nonlinear coupling
+    for (let i = 0; i < n; i++) {
+      const coupling = this.chiralNonlinearCoupling(i);
+      const constraint = this.lambda * this.state[i];
+      this.state[i] += (coupling - constraint) * this.dt;
+    }
+
+    // Apply chiral gain to stabilize preferred handedness
+    const gainedState = this.chiralEngine!.applyChiralGain(this.state, 0.05);
+    this.state = gainedState;
+  }
+
+  /**
+   * Chiral-aware nonlinear coupling
+   * Uses non-reciprocal coupling strengths J_{i,j} ≠ J_{j,i}
+   */
+  private chiralNonlinearCoupling(index: number): number {
+    const n = this.state.length;
+    let coupling = 0;
+
+    for (let j = 0; j < n; j++) {
+      if (j !== index) {
+        // Get non-reciprocal coupling from chiral engine
+        const chiralCoupling = this.chiralEngine!.calculateCoupling(
+          index, j, PHI / n
+        );
+
+        // Use forward or backward coupling based on direction
+        const strength = j > index ? chiralCoupling.forward : chiralCoupling.backward;
+        coupling += strength * Math.sin(this.state[j] - this.state[index]);
+      }
+    }
+
+    return coupling;
   }
 
   /**
@@ -268,9 +375,37 @@ export class ResonanceEngine {
   reset(): void {
     this.state.fill(0);
     this.previousState.fill(0);
+    this.velocity.fill(0);
     this.phase = 0;
     this.tick = 0;
     this.lambda = DAMPING_DEFAULT;
+    if (this.chiralEngine) {
+      this.chiralEngine.reset();
+    }
+  }
+
+  /**
+   * Get chiral stability status
+   */
+  getChiralState(): ChiralState | null {
+    return this.chiralEngine?.getState() ?? null;
+  }
+
+  /**
+   * Check if system is chirally stable
+   */
+  isChirallyStable(): boolean {
+    if (!this.chiralEngine) return true;
+    return this.chiralEngine.getStabilityRegime() === 'stable';
+  }
+
+  /**
+   * Optimize chiral parameters for maximum stability
+   */
+  optimizeChiralStability(): void {
+    if (this.chiralEngine) {
+      this.chiralEngine.optimizeForStability();
+    }
   }
 
   /**

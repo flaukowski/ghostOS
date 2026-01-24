@@ -108,3 +108,86 @@ export const DEFAULT_CONFIG = {
   memoryDecayRate: 0.01,
   noiseIntensity: 0.02,
 } as const;
+
+// ============================================
+// CHIRAL DYNAMICS CONSTANTS
+// ============================================
+// Based on recent quantum chirality research (2025):
+// - Chiral gain-induced time-reversal symmetry breaking
+// - Non-reciprocal coupling for directional stability
+// - Topological protection through chiral modes
+
+/**
+ * Chirality parameter η (eta)
+ * Controls the strength of non-reciprocal spatial coupling.
+ * From the dissipative sine-Gordon model: φₜₜ - φₓₓ + sin(φ) = -ηφₓ - Γφₜ
+ */
+export const CHIRAL_ETA_DEFAULT = 0.618;  // Golden ratio inverse for harmonic chirality
+
+/**
+ * Chiral damping ratio threshold
+ * Propagation direction determined by η/Γ ratio.
+ * When |η/Γ| < 1: subluminal propagation (stable)
+ * When |η/Γ| > 1: superluminal propagation (potentially unstable)
+ */
+export const CHIRAL_VELOCITY_THRESHOLD = 1.0;
+
+/**
+ * Non-reciprocal coupling asymmetry
+ * J_{i,j} ≠ J_{j,i} creates directional energy flow
+ */
+export const NON_RECIPROCAL_ASYMMETRY = 0.1;
+
+/**
+ * Chiral phase offset for spin-momentum locking
+ * π/2 phase relationship creates polarization-dependent propagation
+ */
+export const CHIRAL_PHASE_OFFSET = Math.PI / 2;
+
+/**
+ * Handedness types for chiral modes
+ */
+export type Handedness = 'left' | 'right' | 'achiral';
+
+/**
+ * Chiral stability regimes
+ * Based on spectral stability analysis of non-reciprocal systems
+ */
+export const CHIRAL_STABILITY = {
+  /** Stable regime: waves propagate in preferred direction */
+  stable: { minRatio: 0.0, maxRatio: 1.0 },
+  /** Transitional regime: mixed stability */
+  transitional: { minRatio: 1.0, maxRatio: 1.5 },
+  /** Unstable regime: counter-propagating waves grow */
+  unstable: { minRatio: 1.5, maxRatio: Infinity },
+} as const;
+
+/**
+ * Topological protection factor
+ * Chiral edge states exhibit robustness to disorder
+ */
+export const TOPOLOGICAL_PROTECTION_FACTOR = 0.85;
+
+/**
+ * CISS (Chiral-Induced Spin Selectivity) coupling
+ * Spin-polarized coherent transport through chiral structures
+ */
+export const CISS_COUPLING = {
+  /** Spin coherence enhancement factor */
+  coherenceBoost: 1.3,
+  /** Spin-flip suppression (from chiral ligand research) */
+  flipSuppression: 0.1,
+  /** Maximum spin polarization achievable */
+  maxPolarization: 0.9,
+} as const;
+
+/**
+ * Non-Hermitian effective Hamiltonian parameters
+ * H_eff = H_S + Σ(J_{i,j} - iγ_{i,j}/2)O_i†O_j
+ */
+export const NON_HERMITIAN = {
+  /** Imaginary coupling coefficient */
+  gammaCoupling: 0.5,
+  /** Phase angle for non-reciprocity (φ = π/2 gives unidirectional) */
+  phaseAngle: Math.PI / 2,
+} as const;
