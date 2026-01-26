@@ -18,8 +18,6 @@ import {
   EMERGENCE_COEFFICIENT,
   TAU,
   CHIRAL_ETA_DEFAULT,
-  NON_RECIPROCAL_ASYMMETRY,
-  CISS_COUPLING,
 } from '../constants';
 import type { Signal } from '../signal';
 import { ChiralEngine, type ChiralState, type ChiralConfig } from '../chiral';

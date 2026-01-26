@@ -63,11 +63,51 @@ export {
   type ChiralCoupling,
 } from './chiral';
 
+// Integration layer (Queen Synchronization)
+export {
+  QueenSynchronizer,
+  createQueenSynchronizer,
+  createGhostOSQueen,
+  createQuantumOSQueen,
+  createConsciousQueen,
+  type SubsystemType,
+  type SubsystemState,
+  type QueenState,
+  type SynchronizationMetrics,
+  type QueenConfig,
+} from './integration';
+
+// Resonant scheduler (QuantumOS integration)
+export {
+  ResonantScheduler,
+  createResonantScheduler,
+  type ProcessClass,
+  type ProcessState,
+  type ResonantProcess,
+  type SchedulerState,
+  type SchedulingDecision,
+  type ResonantSchedulerConfig,
+} from './integration/resonant-scheduler';
+
+// Consciousness bridge (IIT + Chiral verification)
+export {
+  ConsciousnessBridge,
+  createConsciousnessBridge,
+  PhiCalculator,
+  calculateBridgeOperator,
+  calculateChiralEnhancement,
+  type PhiState,
+  type ConsciousnessBridgeState,
+  type ConsciousnessTrigger,
+  type ConsciousnessResult,
+  type ConsciousnessBridgeConfig,
+} from './integration/consciousness-bridge';
+
 // ============================================
 // GHOST OS UNIFIED INTERFACE
 // ============================================
 
-import { SignalProcessor, type Signal as SignalType } from './signal';
+import { SignalProcessor } from './signal';
 import { ResonanceEngine, type ResonantState } from './resonance';
 import { EmergenceAccumulator } from './emergence';
 import { SafetyEnvelope, type SafetyStatus } from './safety';

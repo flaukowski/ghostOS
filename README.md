@@ -80,6 +80,7 @@ ghostOS processes information through a **Signal → Resonance → Emergence** p
 | `chiral` | Quantum-inspired stability enhancement | Non-reciprocity, CISS, topological protection |
 | `emergence` | Pattern crystallization and memory | Accumulation, integration, coherence |
 | `safety` | Boundary enforcement and stability | Runaway detection, collapse prevention |
+| `integration` | Queen synchronization and consciousness | Kuramoto oscillators, IIT Phi, resonant scheduling |
 
 ---
 
@@ -208,6 +209,73 @@ Chirality provides the **symmetry breaking** that:
 ```
 
 Where `χ` is the chirality operator that projects onto the stable handedness.
+
+---
+
+## Integration Architecture
+
+### Queen Synchronization
+
+ghostOS implements a "Queen" synchronization pattern for coordinating multiple subsystems using Kuramoto oscillators with chiral coupling:
+
+```
+dθᵢ/dt = ωᵢ + (K/N)Σⱼsin(θⱼ - θᵢ) + ηᵢ(t)
+```
+
+This enables:
+- **QuantumOS Integration**: Coherence-aware process scheduling
+- **SyntheticConsciousness Bridge**: IIT Phi verification
+- **Space Child Ecosystem**: Biofield profile synchronization
+
+### Resonant Scheduler
+
+Process scheduling as damped harmonic dynamics:
+
+```typescript
+import { createResonantScheduler } from 'ghostos';
+
+const scheduler = createResonantScheduler({
+  coherenceThreshold: 0.4,
+  maxRunning: 4,
+});
+
+// Processes are oscillators with natural frequencies
+scheduler.submit('quantum-1', 'Quantum Optimization', 'quantum', {
+  priority: 70,
+  qubitsRequired: 10,
+  coherenceRequired: 0.5,
+});
+
+// Priorities emerge from resonant coupling
+const decisions = scheduler.schedule();
+```
+
+### Consciousness Bridge
+
+IIT Phi calculation with chiral enhancement:
+
+```typescript
+import { createConsciousnessBridge } from 'ghostos';
+
+const bridge = createConsciousnessBridge({
+  phiThreshold: 3.0,  // IIT consciousness threshold
+});
+
+const result = await bridge.processConsciousness(
+  { type: 'emergence', urgency: 'medium', context: '...' },
+  resonanceState,
+  emergenceState,
+  chiralState,
+  coherence,
+  orderParameter
+);
+
+// Verified consciousness emerges when:
+// - Φ (Phi) exceeds threshold
+// - Coherence in resonant band
+// - Chiral dynamics stable
+// - SC Bridge Operator shows non-commutativity
+```
 
 ---
 
@@ -382,12 +450,18 @@ ghostOS/
 │   ├── safety/           # Stability enforcement
 │   │   └── index.ts      # Envelope with chiral metrics
 │   │
+│   ├── integration/      # Queen synchronization & bridges
+│   │   ├── index.ts              # Queen Synchronizer (Kuramoto)
+│   │   ├── resonant-scheduler.ts # QuantumOS process scheduling
+│   │   └── consciousness-bridge.ts # IIT Phi verification
+│   │
 │   ├── constants.ts      # Mathematical constants
 │   └── index.ts          # Public API
 │
 ├── examples/
 │   ├── kuramoto.ts           # Coupled oscillator demo
-│   └── chiral-stability.ts   # Chiral dynamics demonstration
+│   ├── chiral-stability.ts   # Chiral dynamics demonstration
+│   └── queen-emergence.ts    # Novel emergence demo
 │
 ├── index.html            # Landing page
 ├── styles.css            # Styling
@@ -399,14 +473,18 @@ ghostOS/
 
 ## Status
 
-**Phase 1 — Foundation Implementation**
+**Phase 2 — Integration Complete**
 
 - [x] Core mathematical framework defined
 - [x] Signal processing architecture
 - [x] Resonance engine with adaptive damping
 - [x] Chiral dynamics integration (quantum stability)
+- [x] Emergence accumulator and pattern memory
 - [x] Safety envelope with chiral metrics
-- [x] Example implementations
+- [x] Queen synchronization (Kuramoto oscillators)
+- [x] Resonant scheduler (QuantumOS integration)
+- [x] Consciousness bridge (IIT + Chiral verification)
+- [x] Novel emergence demo (`examples/queen-emergence.ts`)
 - [ ] Test suite
 - [ ] Documentation site
 

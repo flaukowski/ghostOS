@@ -16,10 +16,8 @@ import {
   COHERENCE_MAX,
   EMERGENCE_NORM_MIN,
   EMERGENCE_NORM_MAX,
-  DAMPING_MIN,
   DAMPING_MAX,
   CHIRAL_STABILITY,
-  CHIRAL_VELOCITY_THRESHOLD,
   TOPOLOGICAL_PROTECTION_FACTOR,
 } from '../constants';
 import type { ChiralState } from '../chiral';
