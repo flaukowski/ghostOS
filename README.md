@@ -232,7 +232,7 @@ This enables:
 Process scheduling as damped harmonic dynamics:
 
 ```typescript
-import { createResonantScheduler } from 'ghostos';
+import { createResonantScheduler } from '@flaukowski/ghostos';
 
 const scheduler = createResonantScheduler({
   coherenceThreshold: 0.4,
@@ -255,7 +255,7 @@ const decisions = scheduler.schedule();
 IIT Phi calculation with chiral enhancement:
 
 ```typescript
-import { createConsciousnessBridge } from 'ghostos';
+import { createConsciousnessBridge } from '@flaukowski/ghostos';
 
 const bridge = createConsciousnessBridge({
   phiThreshold: 3.0,  // IIT consciousness threshold
@@ -281,10 +281,18 @@ const result = await bridge.processConsciousness(
 
 ## API Reference
 
+### Install
+
+```sh
+npm install @flaukowski/ghostos
+```
+
+ESM and CommonJS both work, with types included. Subpaths: `@flaukowski/ghostos/signal`, `/resonance`, `/emergence`, `/safety` and `/chiral`.
+
 ### Quick Start
 
 ```typescript
-import { GhostOS } from 'ghostos';
+import { GhostOS } from '@flaukowski/ghostos';
 
 // Initialize with chiral stability (enabled by default)
 const ghost = new GhostOS({
@@ -311,7 +319,7 @@ console.log({
 ### Signal Processing
 
 ```typescript
-import { Signal, embed, filter, normalize } from 'ghostos/signal';
+import { Signal, embed, filter, normalize } from '@flaukowski/ghostos/signal';
 
 // Create a signal from raw input
 const signal = Signal.from(rawData);
@@ -333,7 +341,7 @@ const normalized = normalize(filtered);
 ### Resonance Engine
 
 ```typescript
-import { ResonanceEngine } from 'ghostos/resonance';
+import { ResonanceEngine } from '@flaukowski/ghostos/resonance';
 
 // Initialize engine with chiral enhancement
 const engine = new ResonanceEngine({
@@ -358,7 +366,7 @@ console.log({
 ### Chiral Engine (Direct Access)
 
 ```typescript
-import { ChiralEngine, optimalEta } from 'ghostos/chiral';
+import { ChiralEngine, optimalEta } from '@flaukowski/ghostos/chiral';
 
 // Create standalone chiral engine
 const chiral = new ChiralEngine({
@@ -386,7 +394,7 @@ console.log({
 ### Safety Envelope
 
 ```typescript
-import { SafetyEnvelope } from 'ghostos/safety';
+import { SafetyEnvelope } from '@flaukowski/ghostos/safety';
 
 const safety = new SafetyEnvelope({
   coherenceMin: 0.2,
