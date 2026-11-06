@@ -1,5 +1,5 @@
 {
-  "name": "ghostos",
+  "name": "@flaukowski/ghostos",
   "version": "0.1.0",
   "description": "Resonant Systems Architecture for Emergent Intelligence",
   "main": "dist/index.js",
@@ -7,40 +7,78 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     },
     "./signal": {
-      "import": "./dist/signal/index.mjs",
-      "require": "./dist/signal/index.js",
-      "types": "./dist/signal/index.d.ts"
+      "import": {
+        "types": "./dist/signal/index.d.mts",
+        "default": "./dist/signal/index.mjs"
+      },
+      "require": {
+        "types": "./dist/signal/index.d.ts",
+        "default": "./dist/signal/index.js"
+      }
     },
     "./resonance": {
-      "import": "./dist/resonance/index.mjs",
-      "require": "./dist/resonance/index.js",
-      "types": "./dist/resonance/index.d.ts"
+      "import": {
+        "types": "./dist/resonance/index.d.mts",
+        "default": "./dist/resonance/index.mjs"
+      },
+      "require": {
+        "types": "./dist/resonance/index.d.ts",
+        "default": "./dist/resonance/index.js"
+      }
     },
     "./emergence": {
-      "import": "./dist/emergence/index.mjs",
-      "require": "./dist/emergence/index.js",
-      "types": "./dist/emergence/index.d.ts"
+      "import": {
+        "types": "./dist/emergence/index.d.mts",
+        "default": "./dist/emergence/index.mjs"
+      },
+      "require": {
+        "types": "./dist/emergence/index.d.ts",
+        "default": "./dist/emergence/index.js"
+      }
     },
     "./safety": {
-      "import": "./dist/safety/index.mjs",
-      "require": "./dist/safety/index.js",
-      "types": "./dist/safety/index.d.ts"
-    }
+      "import": {
+        "types": "./dist/safety/index.d.mts",
+        "default": "./dist/safety/index.mjs"
+      },
+      "require": {
+        "types": "./dist/safety/index.d.ts",
+        "default": "./dist/safety/index.js"
+      }
+    },
+    "./chiral": {
+      "import": {
+        "types": "./dist/chiral/index.d.mts",
+        "default": "./dist/chiral/index.mjs"
+      },
+      "require": {
+        "types": "./dist/chiral/index.d.ts",
+        "default": "./dist/chiral/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "test": "vitest",
-    "test:run": "vitest run",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:run": "node --test test/*.test.mjs",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
@@ -73,5 +111,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
